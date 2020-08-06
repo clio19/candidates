@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+
 import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -22,44 +25,133 @@ public class JobController {
     @Autowired
     JobRepository jobRepository;
 
+    private Sort.Direction getSortDirection(String direction) {
+        if (direction.equals("asc")) {
+            return Sort.Direction.ASC;
+        } else if (direction.equals("desc")) {
+            return Sort.Direction.DESC;
+        }
 
-    @GetMapping("/jobs")
-    // public ResponseEntity<List<Job>> getAllJobs(@RequestParam(required = false) String title) {
-    public ResponseEntity<Map<String, Object>> getAllJobs(
-            @RequestParam(required = false) String title,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size
-    ) {
+        return Sort.Direction.ASC;
+    }
+
+    @GetMapping("/sortedjobs")
+    public ResponseEntity<List<Job>> getAllJobs(@RequestParam(defaultValue = "id,desc") String[] sort) {
+
         try {
-            List<Job> jobs = new ArrayList<Job>();
-            Pageable paging = PageRequest.of(page, size);
+            List<Order> orders = new ArrayList<Order>();
 
-            Page<Job> pageJobs;
+            if (sort[0].contains(",")) {
+                // will sort more than 2 columns
+                for (String sortOrder : sort) {
+                    // sortOrder="column, direction"
+                    String[] _sort = sortOrder.split(",");
+                    orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
+                }
+            } else {
+                // sort=[column, direction]
+                orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+            }
 
-            if (title == null)
-                //jobRepository.findAll().forEach(jobs::add);
-                pageJobs = jobRepository.findAll(paging);
-            else
-               // jobRepository.findByTitleContaining(title).forEach(jobs::add);
-                pageJobs = jobRepository.findByTitleContaining(title, paging);
+            List<Job> jobs = jobRepository.findAll(Sort.by(orders));
 
-            jobs = pageJobs.getContent();
             if (jobs.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-           // return new ResponseEntity<>(jobs, HttpStatus.OK);
-            Map<String, Object> response = new HashMap<>();
-            response.put("jobs", jobs);
-            response.put("currentPage", pageJobs.getNumber());
-            response.put("totalItems", pageJobs.getTotalElements());
-            response.put("totalPages", pageJobs.getTotalPages());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
+            return new ResponseEntity<>(jobs, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/jobs")
+    public ResponseEntity<Map<String, Object>> getAllJobs(
+            @RequestParam(required = false) String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "id,desc") String[] sort) {
+
+        try {
+            List<Order> orders = new ArrayList<Order>();
+
+            if (sort[0].contains(",")) {
+                // will sort more than 2 fields
+                // sortOrder="field, direction"
+                for (String sortOrder : sort) {
+                    String[] _sort = sortOrder.split(",");
+                    orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
+                }
+            } else {
+                // sort=[field, direction]
+                orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+            }
+
+            List<Job> jobs = new ArrayList<Job>();
+            Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
+
+            Page<Job> pageTuts;
+            if (title == null)
+                pageTuts = jobRepository.findAll(pagingSort);
+            else
+                pageTuts = jobRepository.findByTitleContaining(title, pagingSort);
+
+            jobs = pageTuts.getContent();
+
+            if (jobs.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("jobs", jobs);
+            response.put("currentPage", pageTuts.getNumber());
+            response.put("totalItems", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+//    @GetMapping("/jobs")
+//    // public ResponseEntity<List<Job>> getAllJobs(@RequestParam(required = false) String title) {
+//    public ResponseEntity<Map<String, Object>> getAllJobs(
+//            @RequestParam(required = false) String title,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "3") int size
+//    ) {
+//        try {
+//            List<Job> jobs = new ArrayList<Job>();
+//            Pageable paging = PageRequest.of(page, size);
+//
+//            Page<Job> pageJobs;
+//
+//            if (title == null)
+//                //jobRepository.findAll().forEach(jobs::add);
+//                pageJobs = jobRepository.findAll(paging);
+//            else
+//               // jobRepository.findByTitleContaining(title).forEach(jobs::add);
+//                pageJobs = jobRepository.findByTitleContaining(title, paging);
+//
+//            jobs = pageJobs.getContent();
+//            if (jobs.isEmpty()) {
+//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//            }
+//           // return new ResponseEntity<>(jobs, HttpStatus.OK);
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("jobs", jobs);
+//            response.put("currentPage", pageJobs.getNumber());
+//            response.put("totalItems", pageJobs.getTotalElements());
+//            response.put("totalPages", pageJobs.getTotalPages());
+//
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @GetMapping("/jobs/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable("id") long id) {
