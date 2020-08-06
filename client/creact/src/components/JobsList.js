@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import JobDataService from "../services/JobService";
 import { Link } from "react-router-dom";
 
+import Pagination from "@material-ui/lab/Pagination";
 
 
 const JobsList = () => {
@@ -10,9 +11,15 @@ const JobsList = () => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [searchTitle, setSearchTitle] = useState("");
 
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(0);
+    const [pageSize, setPageSize] = useState(3);
+
+    const pageSizes = [3, 6, 9];
+
   useEffect(() => {
     retrieveJobs();
-  }, []);
+  }, [page, pageSize]);
 
   const onChangeSearchTitle = e => {
     const searchTitle = e.target.value;
@@ -20,9 +27,16 @@ const JobsList = () => {
   };
 
   const retrieveJobs = () => {
-    JobDataService.getAll()
+    const params = getRequestParams(searchTitle, page, pageSize);
+
+    JobDataService.getAll(params)
       .then(response => {
-        setJobs(response.data);
+              const { jobs, totalPages } = response.data;
+
+       // setJobs(response.data);
+        setJobs(jobs);
+        setCount(totalPages);
+
         console.log(response.data);
       })
       .catch(e => {
@@ -40,6 +54,16 @@ const JobsList = () => {
     setCurrentJob(job);
     setCurrentIndex(index);
   };
+
+   const handlePageChange = (event, value) => {
+      setPage(value);
+    }
+
+ const handlePageSizeChange = (event) => {
+    setPageSize(event.target.value);
+    setPage(1);
+  };
+
 
   const removeAllJobs = () => {
     JobDataService.removeAll()
@@ -63,6 +87,25 @@ const JobsList = () => {
       });
   };
 
+   const getRequestParams = (searchTitle, page, pageSize) => {
+      let params = {};
+
+      if (searchTitle) {
+        params["title"] = searchTitle;
+      }
+
+      if (page) {
+        params["page"] = page - 1;
+      }
+
+      if (pageSize) {
+        params["size"] = pageSize;
+      }
+
+      return params;
+    };
+
+
     return (
       <div className="list row">
         <div className="col-md-8">
@@ -78,7 +121,7 @@ const JobsList = () => {
               <button
                 className="btn btn-outline-secondary"
                 type="button"
-                onClick={findByTitle}
+                onClick={retrieveJobs}
               >
                 Search
               </button>
@@ -87,6 +130,28 @@ const JobsList = () => {
         </div>
         <div className="col-md-6">
           <h4>Jobs List</h4>
+
+     <div className="mt-3">
+          {"Items per Page: "}
+          <select onChange={handlePageSizeChange} value={pageSize}>
+            {pageSizes.map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+
+          <Pagination
+            className="my-3"
+            count={count}
+            page={page}
+            siblingCount={1}
+            boundaryCount={1}
+            variant="outlined"
+            shape="rounded"
+            onChange={handlePageChange}
+          />
+        </div>
 
           <ul className="list-group">
             {jobs &&
