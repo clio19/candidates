@@ -171,7 +171,7 @@ public class JobController {
 
 
     @PostMapping("/jobs")
-    public ResponseEntity<Job> createJob(@RequestBody Job job) {
+    public ResponseEntity<Job> createJob(@Valid @RequestBody Job job) {
         Job _job = jobRepository.save(new Job(job.getTitle(), job.getDescription(), false));
         return new ResponseEntity<>(_job, HttpStatus.CREATED);
 //        try {
@@ -184,7 +184,7 @@ public class JobController {
     }
 
     @PutMapping("/jobs/{id}")
-    public ResponseEntity<Job> updateJob(@PathVariable("id") long id, @RequestBody Job job) {
+    public ResponseEntity<Job> updateJob(@PathVariable("id") long id, @Valid @RequestBody Job job) {
         Optional<Job> jobData = Optional.ofNullable(jobRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id)));
 
