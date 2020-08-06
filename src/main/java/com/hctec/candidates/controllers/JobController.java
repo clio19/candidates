@@ -1,6 +1,7 @@
 package com.hctec.candidates.controllers;
 
 
+import com.hctec.candidates.execption.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,7 @@ import org.springframework.data.domain.Sort.Order;
 
 import java.util.*;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8082")
 @RestController
 @RequestMapping("/api")
 public class JobController {
@@ -155,30 +156,37 @@ public class JobController {
 
     @GetMapping("/jobs/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable("id") long id) {
-        Optional<Job> jobData = jobRepository.findById(id);
+        Optional<Job> jobData = Optional.ofNullable(jobRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Job with id = " + id)));
 
-        if (jobData.isPresent()) {
-            return new ResponseEntity<>(jobData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(jobData.get(), HttpStatus.OK);
+
+//        if (jobData.isPresent()) {
+//            return new ResponseEntity<>(jobData.get(), HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+
     }
 
 
     @PostMapping("/jobs")
     public ResponseEntity<Job> createJob(@RequestBody Job job) {
-        try {
-            Job _job = jobRepository
-                    .save(new Job(job.getTitle(), job.getDescription(), false));
-            return new ResponseEntity<>(_job, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Job _job = jobRepository.save(new Job(job.getTitle(), job.getDescription(), false));
+        return new ResponseEntity<>(_job, HttpStatus.CREATED);
+//        try {
+//            Job _job = jobRepository
+//                    .save(new Job(job.getTitle(), job.getDescription(), false));
+//            return new ResponseEntity<>(_job, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
     }
 
     @PutMapping("/jobs/{id}")
     public ResponseEntity<Job> updateJob(@PathVariable("id") long id, @RequestBody Job job) {
-        Optional<Job> jobData = jobRepository.findById(id);
+        Optional<Job> jobData = Optional.ofNullable(jobRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id)));
 
         if (jobData.isPresent()) {
             Job _job = jobData.get();
