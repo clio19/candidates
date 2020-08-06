@@ -1,5 +1,10 @@
 package com.hctec.candidates.controllers;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import com.hctec.candidates.models.Job;
 import com.hctec.candidates.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -21,18 +24,37 @@ public class JobController {
 
 
     @GetMapping("/jobs")
-    public ResponseEntity<List<Job>> getAllJobs(@RequestParam(required = false) String title) {
+    // public ResponseEntity<List<Job>> getAllJobs(@RequestParam(required = false) String title) {
+    public ResponseEntity<Map<String, Object>> getAllJobs(
+            @RequestParam(required = false) String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
         try {
             List<Job> jobs = new ArrayList<Job>();
+            Pageable paging = PageRequest.of(page, size);
+
+            Page<Job> pageJobs;
 
             if (title == null)
-                jobRepository.findAll().forEach(jobs::add);
+                //jobRepository.findAll().forEach(jobs::add);
+                pageJobs = jobRepository.findAll(paging);
             else
-                jobRepository.findByTitleContaining(title).forEach(jobs::add);
+               // jobRepository.findByTitleContaining(title).forEach(jobs::add);
+                pageJobs = jobRepository.findByTitleContaining(title, paging);
+
+            jobs = pageJobs.getContent();
             if (jobs.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(jobs, HttpStatus.OK);
+           // return new ResponseEntity<>(jobs, HttpStatus.OK);
+            Map<String, Object> response = new HashMap<>();
+            response.put("jobs", jobs);
+            response.put("currentPage", pageJobs.getNumber());
+            response.put("totalItems", pageJobs.getTotalElements());
+            response.put("totalPages", pageJobs.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -77,7 +99,7 @@ public class JobController {
         }
     }
 
-    @DeleteMapping("/tutojobsrials/{id}")
+    @DeleteMapping("/jobs/{id}")
     public ResponseEntity<HttpStatus> deleteJob(@PathVariable("id") long id) {
         try {
             jobRepository.deleteById(id);
@@ -99,14 +121,31 @@ public class JobController {
     }
 
     @GetMapping("/jobs/published")
-    public ResponseEntity<List<Job>> findByPublished() {
+    // public ResponseEntity<List<Job>> findByPublished() {
+    public ResponseEntity<Map<String, Object>> findByPublished(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
         try {
-            List<Job> jobs = jobRepository.findByPublished(true);
+            //  List<Job> jobs = jobRepository.findByPublished(true);
+            List<Job> jobs = new ArrayList<Job>();
+            Pageable paging = PageRequest.of(page, size);
+
+            Page<Job> pageJobs = jobRepository.findByPublished(true, paging);
+            jobs = pageJobs.getContent();
 
             if (jobs.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(jobs, HttpStatus.OK);
+            // return new ResponseEntity<>(jobs, HttpStatus.OK);
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("jobs", jobs);
+            response.put("currentPage", pageJobs.getNumber());
+            response.put("totalItems", pageJobs.getTotalElements());
+            response.put("totalPages", pageJobs.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

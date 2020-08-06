@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,9 +50,9 @@ public class JPAUnitTest {
         Job job3 = new Job("job#3", "Desc#3", true);
         entityManager.persist(job3);
 
-        Iterable<Job> joborials = repository.findAll();
+        Iterable<Job> jobs = repository.findAll();
 
-        assertThat(joborials).hasSize(3).contains(job1, job2, job3);
+        assertThat(jobs).hasSize(3).contains(job1, job2, job3);
     }
 
     @Test
@@ -77,9 +79,12 @@ public class JPAUnitTest {
         Job job3 = new Job("Job#3", "Desc#3", true);
         entityManager.persist(job3);
 
-        Iterable<Job> joborials = repository.findByPublished(true);
+        Pageable paging = PageRequest.of(0, 3);
 
-        assertThat(joborials).hasSize(2).contains(job1, job3);
+        //Iterable<Job> jobs = repository.findByPublished(true);
+        Iterable<Job> jobs = repository.findByPublished(true,paging);
+
+        assertThat(jobs).hasSize(2).contains(job1, job3);
     }
 
     @Test
@@ -93,9 +98,11 @@ public class JPAUnitTest {
         Job job3 = new Job("Spring Data JPA Job#3", "Desc#3", true);
         entityManager.persist(job3);
 
-        Iterable<Job> joborials = repository.findByTitleContaining("ring");
+        Pageable paging = PageRequest.of(0, 3);
 
-        assertThat(joborials).hasSize(2).contains(job1, job3);
+        Iterable<Job> jobs = repository.findByTitleContaining("ring", paging);
+
+        assertThat(jobs).hasSize(2).contains(job1, job3);
     }
 
     @Test

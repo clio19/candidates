@@ -3,10 +3,11 @@ package com.hctec.candidates.repository;
 import com.hctec.candidates.models.Job;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface JobRepository extends JpaRepository<Job, Long> {
     // Mines
-    List<Job> findByPublished(boolean published);
-    List<Job> findByTitleContaining(String title);
+    Page<Job> findByPublished(boolean published, Pageable pageable);
+    Page<Job> findByTitleContaining(String title,  Pageable pageable);
 }
