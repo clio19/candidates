@@ -1,4 +1,11 @@
 package com.hctec.candidates.repository;
 
-public class JobRepository {
+import com.hctec.candidates.models.Job;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface JobRepository extends JpaRepository<Job, Long> {
+    List<Job> findByPublished(boolean published);
+    List<Job> findByTitleContaining(String title);
 }
