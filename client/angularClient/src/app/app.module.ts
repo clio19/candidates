@@ -15,6 +15,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
+import { AddJobComponent } from './components/add-job/add-job.component';
+import { JobDetailsComponent } from './components/job-details/job-details.component';
+import { JobsListComponent } from './components/jobs-list/jobs-list.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { authInterceptorProviders } from './_helpers/auth.interceptor';
     BoardAdminComponent,
     BoardModeratorComponent,
     BoardUserComponent,
+    AddJobComponent,
+    JobDetailsComponent,
+    JobsListComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [authInterceptorProviders],

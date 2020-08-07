@@ -8,6 +8,9 @@ import { ProfileComponent } from './profile/profile.component';
 import { BoardUserComponent } from './board-user/board-user.component';
 import { BoardModeratorComponent } from './board-moderator/board-moderator.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
+import { JobsListComponent } from './components/jobs-list/jobs-list.component';
+import { JobDetailsComponent } from './components/job-details/job-details.component';
+import { AddJobComponent } from './components/add-job/add-job.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -17,6 +20,9 @@ const routes: Routes = [
   { path: 'user', component: BoardUserComponent },
   { path: 'mod', component: BoardModeratorComponent },
   { path: 'admin', component: BoardAdminComponent },
+  { path: 'jobs', component: JobsListComponent },
+  { path: 'jobs/:id', component: JobDetailsComponent },
+  { path: 'add', component: AddJobComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
 
