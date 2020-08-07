@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import AuthService from "../services/auth.service";
+import React, { Component } from 'react';
+import AuthService from '../../services/auth.service';
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentUser: AuthService.getCurrentUser()
+      currentUser: AuthService.getCurrentUser(),
     };
   }
 
@@ -21,17 +21,14 @@ export default class Profile extends Component {
           </h3>
         </header>
         <p>
-          <strong>Token:</strong>{" "}
-          {currentUser.accessToken.substring(0, 20)} ...{" "}
+          <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{' '}
           {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
         </p>
         <p>
-          <strong>Id:</strong>{" "}
-          {currentUser.id}
+          <strong>Id:</strong> {currentUser.id}
         </p>
         <p>
-          <strong>Email:</strong>{" "}
-          {currentUser.email}
+          <strong>Email:</strong> {currentUser.email}
         </p>
         <strong>Authorities:</strong>
         <ul>

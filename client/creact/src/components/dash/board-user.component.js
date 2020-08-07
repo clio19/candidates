@@ -1,29 +1,31 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import UserService from "../services/user.service";
+import UserService from '../../services/user.service';
 
-export default class BoardModerator  extends Component {
+export default class BoardUser extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      content: ""
+      content: '',
     };
   }
 
   componentDidMount() {
-    UserService.getModeratorBoard().then(
-      response => {
+    UserService.getUserBoard().then(
+      (response) => {
         this.setState({
-          content: response.data
+          content: response.data,
         });
       },
-      error => {
+      (error) => {
         this.setState({
           content:
-            (error.response && error.response.data) ||
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
             error.message ||
-            error.toString()
+            error.toString(),
         });
       }
     );
