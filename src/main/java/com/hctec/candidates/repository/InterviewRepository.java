@@ -1,4 +1,8 @@
 package com.hctec.candidates.repository;
 
-public class InterviewRepository {
+import com.hctec.candidates.domain.Interview;
+import org.springframework.data.repository.CrudRepository;
+
+
+public interface InterviewRepository extends CrudRepository<Interview, Long> {
 }

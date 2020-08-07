@@ -11,14 +11,17 @@ import com.hctec.candidates.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
+import javax.validation.Valid;
 import java.util.*;
 
-@CrossOrigin(origins = "http://localhost:8082")
+@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api")
 public class JobController {
@@ -154,6 +157,20 @@ public class JobController {
 //        }
 //    }
 
+    @PostMapping("/jobs")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+    public ResponseEntity<Job> createJob(@Valid @RequestBody Job job) {
+        Job _job = jobRepository.save(new Job(job.getTitle(), job.getDescription(), false));
+        return new ResponseEntity<>(_job, HttpStatus.CREATED);
+//        try {
+//            Job _job = jobRepository
+//                    .save(new Job(job.getTitle(), job.getDescription(), false));
+//            return new ResponseEntity<>(_job, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+    }
+
     @GetMapping("/jobs/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable("id") long id) {
         Optional<Job> jobData = Optional.ofNullable(jobRepository.findById(id)
@@ -167,20 +184,6 @@ public class JobController {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
 
-    }
-
-
-    @PostMapping("/jobs")
-    public ResponseEntity<Job> createJob(@Valid @RequestBody Job job) {
-        Job _job = jobRepository.save(new Job(job.getTitle(), job.getDescription(), false));
-        return new ResponseEntity<>(_job, HttpStatus.CREATED);
-//        try {
-//            Job _job = jobRepository
-//                    .save(new Job(job.getTitle(), job.getDescription(), false));
-//            return new ResponseEntity<>(_job, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
     }
 
     @PutMapping("/jobs/{id}")
@@ -208,7 +211,7 @@ public class JobController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     @DeleteMapping("/jobs")
     public ResponseEntity<HttpStatus> deleteAllJobs() {
         try {
