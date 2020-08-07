@@ -11,22 +11,64 @@ export class JobsListComponent implements OnInit {
   currentJob = null;
   currentIndex = -1;
   title = '';
+
+  page = 1;
+  count = 0;
+  pageSize = 3;
+  pageSizes = [3, 6, 9];
+
   constructor(private jobService: JobService) {}
 
   ngOnInit(): void {
     this.retrieveJobs();
   }
+
+  getRequestParams(searchTitle, page, pageSize): any {
+    // tslint:disable-next-line:prefer-const
+    let params = {};
+
+    if (searchTitle) {
+      params[`title`] = searchTitle;
+    }
+
+    if (page) {
+      params[`page`] = page - 1;
+    }
+
+    if (pageSize) {
+      params[`size`] = pageSize;
+    }
+
+    return params;
+  }
+
   retrieveJobs(): void {
-    this.jobService.getAll().subscribe(
-      (data) => {
-        this.jobs = data.jobs;
-        console.log(data);
+    const params = this.getRequestParams(this.title, this.page, this.pageSize);
+
+    this.jobService.getAll(params).subscribe(
+      (response) => {
+        const { jobs, totalItems } = response;
+        this.jobs = jobs;
+        this.count = totalItems;
+        console.log(response);
       },
       (error) => {
         console.log(error);
       }
     );
   }
+
+  handlePageChange(event): void {
+    this.page = event;
+    this.retrieveJobs();
+  }
+
+  handlePageSizeChange(event): void {
+    this.pageSize = event.target.value;
+    this.page = 1;
+    this.retrieveJobs();
+  }
+
   refreshList(): void {
     this.retrieveJobs();
     this.currentJob = null;

@@ -19,6 +19,8 @@ import { AddJobComponent } from './components/add-job/add-job.component';
 import { JobDetailsComponent } from './components/job-details/job-details.component';
 import { JobsListComponent } from './components/jobs-list/jobs-list.component';
 
+import { NgxPaginationModule } from 'ngx-pagination';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +35,13 @@ import { JobsListComponent } from './components/jobs-list/jobs-list.component';
     JobDetailsComponent,
     JobsListComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    NgxPaginationModule,
+  ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent],
 })
