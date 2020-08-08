@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { GET_ERRORS, GET_INTERVIEWS, GET_INTERVIEW } from './types';
+import {
+  GET_ERRORS,
+  GET_INTERVIEWS,
+  GET_INTERVIEW,
+  DELETE_INTERVIEW,
+} from './types';
 
 export const createInterview = (interview, history) => async (dispatch) => {
   try {
@@ -30,4 +35,18 @@ export const getInterview = (id, history) => async (dispatch) => {
     type: GET_INTERVIEW,
     payload: res.data,
   });
+};
+
+export const deleteInterview = (id) => async (dispatch) => {
+  if (
+    window.confirm(
+      'Are you sure? This will delete the interview and all the data related to it'
+    )
+  ) {
+    await axios.delete(`/api/interview/${id}`);
+    dispatch({
+      type: DELETE_INTERVIEW,
+      payload: id,
+    });
+  }
 };

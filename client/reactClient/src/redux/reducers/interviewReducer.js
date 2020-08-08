@@ -1,4 +1,8 @@
-import { GET_INTERVIEWS, GET_INTERVIEW } from '../actions/types';
+import {
+  GET_INTERVIEWS,
+  GET_INTERVIEW,
+  DELETE_INTERVIEW,
+} from '../actions/types';
 
 const initialState = {
   interviews: [],
@@ -17,6 +21,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         interview: action.payload,
+      };
+    case DELETE_INTERVIEW:
+      return {
+        ...state,
+        interviews: state.interviews.filter(
+          (interview) => interview.interviewIdentifier !== action.payload
+        ),
       };
     default:
       return state;

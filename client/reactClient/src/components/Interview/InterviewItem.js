@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
 
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+
+import { deleteInterview } from '../../redux/actions/interviewActions';
+
 class InterviewItem extends Component {
+  onDeleteClick = (id) => {
+    this.props.deleteInterview(id);
+  };
+
   render() {
+    const { interview } = this.props;
+
     return (
       <div className="container">
         <div className="card card-body bg-light mb-3">
           <div className="row">
             <div className="col-2">
-              <span className="mx-auto">REACT</span>
+              <span className="mx-auto">{interview.interviewIdentifier}</span>
             </div>
             <div className="col-lg-6 col-md-4 col-8">
-              <h3>Spring / React Interview</h3>
-              <p>
-                Interview to create a Kanban Board with Spring Boot and React
-              </p>
+              <h3>{interview.interviewName}</h3>
+              <p>{interview.description}</p>
             </div>
             <div className="col-md-4 d-none d-lg-block">
               <ul className="list-group">
@@ -25,16 +35,21 @@ class InterviewItem extends Component {
                     </i>
                   </li>
                 </a>
-                <a href="#">
+                <Link to={`/updateInterview/${interview.interviewIdentifier}`}>
                   <li className="list-group-item update">
                     <i className="fa fa-edit pr-1"> Update Interview Info</i>
                   </li>
-                </a>
-                <a href="">
-                  <li className="list-group-item delete">
-                    <i className="fa fa-minus-circle pr-1"> Delete Interview</i>
-                  </li>
-                </a>
+                </Link>
+
+                <li
+                  className="list-group-item delete"
+                  onClick={this.onDeleteClick.bind(
+                    this,
+                    interview.interviewIdentifier
+                  )}
+                >
+                  <i className="fa fa-minus-circle pr-1"> Delete Interview</i>
+                </li>
               </ul>
             </div>
           </div>
@@ -43,4 +58,9 @@ class InterviewItem extends Component {
     );
   }
 }
-export default InterviewItem;
+
+InterviewItem.propTypes = {
+  deleteInterview: PropTypes.func.isRequired,
+};
+
+export default connect(null, { deleteInterview })(InterviewItem);
