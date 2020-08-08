@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import UserService from '../../services/user.service';
 
+import InterviewBoard from '../Interview/InterviewBoard';
+
 export default class BoardModerator extends Component {
   constructor(props) {
     super(props);
@@ -31,11 +33,10 @@ export default class BoardModerator extends Component {
 
   render() {
     return (
-      <div className="container">
-        <header className="jumbotron">
-          <h3>{this.state.content}</h3>
-        </header>
-      </div>
+      <>
+        <h3>{this.state.content}</h3>
+        <InterviewBoard />
+      </>
     );
   }
 }
