@@ -12,7 +12,7 @@ export const createInterview = (interview, history) => async (dispatch) => {
       'http://localhost:8080/api/interview',
       interview
     );
-    history.push('/mod');
+    history.push('/user');
   } catch (err) {
     dispatch({
       type: GET_ERRORS,

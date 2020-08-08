@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createInterview } from '../../redux/actions/interviewActions';
 
+import classnames from 'classnames';
+
 class AddInterview extends Component {
   constructor() {
     super();
@@ -38,7 +40,7 @@ class AddInterview extends Component {
     this.props.createInterview(newInterview, this.props.history);
   }
 
-  //life cycle hooks
+  //life cycle methods change to hook
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
@@ -63,41 +65,60 @@ class AddInterview extends Component {
             <div className="container">
               <div className="row">
                 <div className="col-md-8 m-auto">
-                  <h5 className="display-4 text-center">
-                    Create Interview form
-                  </h5>
+                  <h5 className="display-4 text-center">Create Interview</h5>
                   <hr />
                   <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                       <input
                         type="text"
-                        className="form-control form-control-lg "
-                        placeholder="Interview Name"
+                        className={classnames('form-control form-control-lg', {
+                          'is-invalid': errors.interviewName,
+                        })}
+                        placeholder="Interviewer Person Name"
                         name="interviewName"
                         value={this.state.interviewName}
                         onChange={this.onChange}
                       />
+                      {errors.interviewName && (
+                        <div className="invalid-feedback">
+                          {errors.interviewName}
+                        </div>
+                      )}
                     </div>
                     <div className="form-group">
                       <input
                         type="text"
-                        className="form-control form-control-lg"
-                        placeholder="Unique Interview ID"
+                        className={classnames('form-control form-control-lg', {
+                          'is-invalid': errors.interviewIdentifier,
+                        })}
+                        placeholder="Job Interview "
                         name="interviewIdentifier"
                         value={this.state.interviewIdentifier}
                         onChange={this.onChange}
                       />
+                      {errors.interviewIdentifier && (
+                        <div className="invalid-feedback">
+                          {errors.interviewIdentifier}
+                        </div>
+                      )}
                     </div>
                     <div className="form-group">
                       <textarea
-                        className="form-control form-control-lg"
+                        className={classnames('form-control form-control-lg', {
+                          'is-invalid': errors.description,
+                        })}
                         placeholder="Interview Description"
                         name="description"
                         value={this.state.description}
                         onChange={this.onChange}
                       />
+                      {errors.description && (
+                        <div className="invalid-feedback">
+                          {errors.description}
+                        </div>
+                      )}
                     </div>
-                    <h6>Start Date</h6>
+                    <h6>Start Process Date</h6>
                     <div className="form-group">
                       <input
                         type="date"

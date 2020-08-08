@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import UserService from '../../services/user.service';
 
-import InterviewBoard from '../Interview/InterviewBoard';
+import JobsList from '../jobs/JobsList';
 
 export default class BoardModerator extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ export default class BoardModerator extends Component {
     return (
       <>
         <h3>{this.state.content}</h3>
-        <InterviewBoard />
+        <JobsList />
       </>
     );
   }

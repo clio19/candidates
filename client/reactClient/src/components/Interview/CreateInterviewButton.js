@@ -5,7 +5,7 @@ const CreateInterviewButton = () => {
   return (
     <React.Fragment>
       <Link to="/addInterview" className="btn btn-lg btn-info">
-        Make Interview
+        Create Interview
       </Link>
     </React.Fragment>
   );

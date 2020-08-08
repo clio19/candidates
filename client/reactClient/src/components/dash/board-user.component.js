@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import UserService from '../../services/user.service';
 
+import InterviewBoard from '../Interview/InterviewBoard';
+
 // export default class BoardUser extends Component {
 //   constructor(props) {
 //     super(props);
@@ -69,6 +71,7 @@ const BoardUser = () => {
       <header className="jumbotron">
         <h3>{content}</h3>
       </header>
+      <InterviewBoard />
     </div>
   );
 };
