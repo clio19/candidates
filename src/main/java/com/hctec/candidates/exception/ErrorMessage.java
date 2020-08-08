@@ -1,4 +1,4 @@
-package com.hctec.candidates.execption;
+package com.hctec.candidates.exception;
 
 import java.util.Date;
 

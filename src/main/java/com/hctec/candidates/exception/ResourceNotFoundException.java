@@ -1,4 +1,4 @@
-package com.hctec.candidates.execption;
+package com.hctec.candidates.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 

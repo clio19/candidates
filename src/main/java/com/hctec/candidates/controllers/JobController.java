@@ -1,7 +1,7 @@
 package com.hctec.candidates.controllers;
 
 
-import com.hctec.candidates.execption.ResourceNotFoundException;
+import com.hctec.candidates.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

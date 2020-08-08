@@ -1,4 +1,4 @@
-package com.hctec.candidates.execption;
+package com.hctec.candidates.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
