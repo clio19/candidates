@@ -3,14 +3,20 @@
     <header class="jumbotron">
       <h3>{{content}}</h3>
     </header>
+    <JobsList />
   </div>
 </template>
 
 <script>
 import UserService from "../services/user.service";
+import JobsList from "../components/JobsList";
 
 export default {
   name: "Home",
+
+  components: {
+    JobsList,
+  },
   data() {
     return {
       content: "",

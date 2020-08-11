@@ -8,6 +8,14 @@
             <font-awesome-icon icon="home" />Home
           </router-link>
         </li>
+
+        <li class="nav-item">
+          <a href="/jobs" class="nav-link">Jobs</a>
+        </li>
+        <li class="nav-item">
+          <a href="/add" class="nav-link">Add</a>
+        </li>
+
         <li v-if="showAdminBoard" class="nav-item">
           <router-link to="/admin" class="nav-link">Admin Board</router-link>
         </li>
