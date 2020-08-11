@@ -1,8 +1,8 @@
 import http from "../http-common";
 
 class JobDataService {
-    getAll() {
-        return http.get("/jobs");
+    getAll(params) {
+        return http.get("/jobs", { params });
     }
 
     get(id) {

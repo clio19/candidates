@@ -26,6 +26,8 @@ Vue.config.productionTip = false;
 Vue.use(VeeValidate);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
+
+
 Vue.use(Vuex);
 
 
