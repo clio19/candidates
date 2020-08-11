@@ -13,7 +13,7 @@ public class Backlog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer PTSequence = 0;
+    private Integer ITSequence = 0;
     private String interviewIdentifier;
 
     //OneToOne with interview
@@ -37,12 +37,12 @@ public class Backlog {
         this.id = id;
     }
 
-    public Integer getPTSequence() {
-        return PTSequence;
+    public Integer getITSequence() {
+        return ITSequence;
     }
 
-    public void setPTSequence(Integer PTSequence) {
-        this.PTSequence = PTSequence;
+    public void setITSequence(Integer ITSequence) {
+        this.ITSequence = ITSequence;
     }
 
     public String getInterviewIdentifier() {
@@ -68,4 +68,5 @@ public class Backlog {
     public void setInterviewTasks(List<InterviewTask> interviewTasks) {
         this.interviewTasks = interviewTasks;
     }
+
 }

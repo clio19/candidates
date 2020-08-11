@@ -25,8 +25,16 @@ public class InterviewTask {
     @JsonIgnore
     private Backlog backlog;
 
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
+    }
+
     @Column(updatable = false)
-    private String interviewIdentifer;
+    private String interviewIdentifier;
     private Date create_At;
     private Date update_At;
 
@@ -90,11 +98,11 @@ public class InterviewTask {
     }
 
     public String getInterviewIdentifer() {
-        return interviewIdentifer;
+        return interviewIdentifier;
     }
 
-    public void setInterviewIdentifer(String interviewIdentifer) {
-        this.interviewIdentifer = interviewIdentifer;
+    public void setInterviewIdentifer(String interviewIdentifier) {
+        this.interviewIdentifier = interviewIdentifier;
     }
 
     public Date getCreate_At() {
@@ -132,7 +140,7 @@ public class InterviewTask {
                 ", status='" + status + '\'' +
                 ", priority=" + priority +
                 ", dueDate=" + dueDate +
-                ", interviewIdentifer='" + interviewIdentifer + '\'' +
+                ", interviewIdentifier='" + interviewIdentifier + '\'' +
                 ", create_At=" + create_At +
                 ", update_At=" + update_At +
                 '}';
