@@ -1,10 +1,11 @@
 package com.hctec.candidates.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.annotation.processing.Generated;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Backlog {
@@ -16,9 +17,14 @@ public class Backlog {
     private String interviewIdentifier;
 
     //OneToOne with interview
+    @OneToOne(fetch = FetchType.EAGER) // Lazzy not load until is explicitly requested
+    @JoinColumn(name="interview_id",nullable = false)
+    @JsonIgnore
+    private Interview interview;
 
     //OneToMany interviewtasks
-
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+    private List<InterviewTask> interviewTasks = new ArrayList<>();
 
     public Backlog() {
     }
@@ -45,5 +51,21 @@ public class Backlog {
 
     public void setInterviewIdentifier(String interviewIdentifier) {
         this.interviewIdentifier = interviewIdentifier;
+    }
+
+    public Interview getInterview() {
+        return interview;
+    }
+
+    public void setInterview(Interview interview) {
+        this.interview = interview;
+    }
+
+    public List<InterviewTask> getInterviewTasks() {
+        return interviewTasks;
+    }
+
+    public void setInterviewTasks(List<InterviewTask> interviewTasks) {
+        this.interviewTasks = interviewTasks;
     }
 }
