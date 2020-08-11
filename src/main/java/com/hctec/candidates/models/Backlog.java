@@ -23,7 +23,7 @@ public class Backlog {
     private Interview interview;
 
     //OneToMany interviewtasks
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog", orphanRemoval = true)
     private List<InterviewTask> interviewTasks = new ArrayList<>();
 
     public Backlog() {

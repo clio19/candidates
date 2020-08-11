@@ -1,5 +1,6 @@
 package com.hctec.candidates.controllers;
 
+import com.hctec.candidates.models.Backlog;
 import com.hctec.candidates.models.InterviewTask;
 import com.hctec.candidates.services.InterviewService;
 import com.hctec.candidates.services.InterviewTaskService;
@@ -26,7 +27,7 @@ public class BacklogController {
 
     @PostMapping("/{backlog_id}")
     public ResponseEntity<?> addPTtoBacklog(@Valid @RequestBody InterviewTask interviewTask,
-                                            BindingResult result, @PathVariable String backlog_id){
+                                            BindingResult result, @PathVariable String backlog_id) {
         //show delete
         //custom exception
 
@@ -40,17 +41,42 @@ public class BacklogController {
     }
 
     @GetMapping("/{backlog_id}")
-    public Iterable<InterviewTask> getInterviewBacklog(@PathVariable String backlog_id){
+    public Iterable<InterviewTask> getInterviewBacklog(@PathVariable String backlog_id) {
 
         return interviewTaskService.findBacklogById(backlog_id);
 
     }
 
     @GetMapping("/{backlog_id}/{it_id}")
-    public ResponseEntity<?> getInterviewTask(@PathVariable String backlog_id, @PathVariable String it_id){
+    public ResponseEntity<?> getInterviewTask(@PathVariable String backlog_id, @PathVariable String it_id) {
         InterviewTask interviewTask = interviewTaskService.findITByInterviewSequence(backlog_id, it_id);
-        return new ResponseEntity<InterviewTask>( interviewTask, HttpStatus.OK);
+        return new ResponseEntity<InterviewTask>(interviewTask, HttpStatus.OK);
     }
+
+    @PatchMapping("/{backlog_id}/{it_id}")
+    public ResponseEntity<?> updateInterviewTask(@Valid @RequestBody InterviewTask interviewTask, BindingResult result,
+                                                 @PathVariable String backlog_id, @PathVariable String it_id
+    ) {
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if (errorMap != null) return errorMap;
+
+        InterviewTask updatedTask = interviewTaskService.updateByInterviewSequence(interviewTask, backlog_id, it_id);
+
+
+        return new ResponseEntity<InterviewTask>(updatedTask, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{backlog_id}/{it_id}")
+    public ResponseEntity<?> deleteInterviewTask(@PathVariable String backlog_id, @PathVariable String it_id){
+//        Backlog backlog = interviewTask.getBacklog();
+//       List <InterviewTask> its = backlog.getInterviewTask();
+//       its.remove(interviewTask);
+//        backlogRepository.save(backlog)
+        interviewTaskService.deleteITByInterviewSequence(backlog_id, it_id);
+
+        return new ResponseEntity<String>("Interview Task "+it_id+" was deleted successfully", HttpStatus.OK);
+    }
+
 
 
 }

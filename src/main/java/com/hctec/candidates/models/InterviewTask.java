@@ -97,7 +97,7 @@ public class InterviewTask {
         this.dueDate = dueDate;
     }
 
-    public String getInterviewIdentifer() {
+    public String getInterviewIdentifier() {
         return interviewIdentifier;
     }
 
