@@ -57,7 +57,7 @@ public class JobController {
                 orders.add(new Order(getSortDirection(sort[1]), sort[0]));
             }
 
-            List<Job> jobs = jobRepository.findAll(Sort.by(orders));
+            List<Job> jobs = (List<Job>) jobRepository.findAll(Sort.by(orders));
 
             if (jobs.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
