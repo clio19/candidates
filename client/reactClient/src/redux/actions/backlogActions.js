@@ -26,3 +26,32 @@ export const addInterviewTask = (backlog_id, interview_task, history) => async (
     });
   }
 };
+
+export const getBacklog = (backlog_id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/api/backlog/${backlog_id}`);
+    dispatch({
+      type: GET_BACKLOG,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data,
+    });
+  }
+};
+
+export const getInterviewTask = (backlog_id, pt_id, history) => async (
+  dispatch
+) => {
+  try {
+    const res = await axios.get(`/api/backlog/${backlog_id}/${pt_id}`);
+    dispatch({
+      type: GET_INTERVIEW_TASK,
+      payload: res.data,
+    });
+  } catch (err) {
+    history.push('/dashboard');
+  }
+};

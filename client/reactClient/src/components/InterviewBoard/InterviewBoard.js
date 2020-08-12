@@ -1,77 +1,81 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Backlog from './Backlog';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { getBacklog } from '../../redux/actions/backlogActions';
 
-export default class Interview extends Component {
+class InterviewBoard extends Component {
+  //constructor to handle errors
+  constructor() {
+    super();
+    this.state = {
+      errors: {},
+    };
+  }
+
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    this.props.getBacklog(id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   render() {
     const { id } = this.props.match.params;
+    const { interview_tasks } = this.props.backlog;
+    const { errors } = this.state;
+
+    let BoardContent;
+
+    const boardAlgorithm = (errors, interview_tasks) => {
+      if (interview_tasks.length < 1) {
+        if (errors.interviewNotFound) {
+          return (
+            <div className="alert alert-danger text-center" role="alert">
+              {errors.interviewNotFound}
+            </div>
+          );
+        } else {
+          return (
+            <div className="alert alert-info text-center" role="alert">
+              No Project Tasks on this board
+            </div>
+          );
+        }
+      } else {
+        return <Backlog interview_tasks_prop={interview_tasks} />;
+      }
+    };
+
+    BoardContent = boardAlgorithm(errors, interview_tasks);
 
     return (
       <div className="container">
-        <Link to={`/addInterviewTask/${id}`} className="btn btn-primary mb-3">
-          <i className="fas fa-plus-circle"> Create Interview Task</i>
+        <Link to={`/addProjectTask/${id}`} className="btn btn-primary mb-3">
+          <i className="fas fa-plus-circle"> Create Project Task</i>
         </Link>
         <br />
         <hr />
-        {
-          // <!-- Backlog STARTS HERE -->
-        }
-        <div className="container">
-          <div className="row">
-            <div className="col-md-4">
-              <div className="card text-center mb-2">
-                <div className="card-header bg-secondary text-white">
-                  <h3>PERSPECT</h3>
-                </div>
-              </div>
-              {
-                // <!-- SAMPLE INTERVIEW TASK STARTS HERE -->
-              }
-              <div className="card mb-1 bg-light">
-                <div className="card-header text-primary">
-                  ID: interviewSequence -- Priority: priorityString
-                </div>
-                <div className="card-body bg-light">
-                  <h5 className="card-title">interview_task.summary</h5>
-                  <p className="card-text text-truncate ">
-                    interview_task.acceptanceCriteria
-                  </p>
-                  <a href="" className="btn btn-primary">
-                    View / Update
-                  </a>
-
-                  <button className="btn btn-danger ml-4">Delete</button>
-                </div>
-              </div>
-
-              {
-                // <!-- SAMPLE INTERVIEW TASK ENDS HERE -->
-              }
-            </div>
-            <div className="col-md-4">
-              <div className="card text-center mb-2">
-                <div className="card-header bg-primary text-white">
-                  <h3>In Progress</h3>
-                </div>
-              </div>
-              {
-                //  <!-- SAMPLE INTERVIEW TASK STARTS HERE -->
-                //         <!-- SAMPLE INTERVIEW TASK ENDS HERE -->
-              }
-            </div>
-            <div className="col-md-4">
-              <div className="card text-center mb-2">
-                <div className="card-header bg-success text-white">
-                  <h3>ACCEPTED</h3>
-                </div>
-              </div>
-              {
-                // <!-- SAMPLE INTERVIEW TASK STARTS HERE -->
-                // <!-- SAMPLE INTERVIEW TASK ENDS HERE -->
-              }
-            </div>
-          </div>
-        </div>
+        {BoardContent}
       </div>
     );
   }
 }
+
+InterviewBoard.propTypes = {
+  backlog: PropTypes.object.isRequired,
+  getBacklog: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  backlog: state.backlog,
+  errors: state.errors,
+});
+
+export default connect(mapStateToProps, { getBacklog })(InterviewBoard);
