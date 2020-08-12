@@ -45,7 +45,7 @@ public class InterviewTaskService {
 //        }
             //INITIAL status when status is null
             if(interviewTask.getStatus()==""|| interviewTask.getStatus()==null){
-                interviewTask.setStatus("TO_DO");
+                interviewTask.setStatus("PROSPECT");
             }
 
         //Fix bug with priority in Spring Boot Server, needs to check null first

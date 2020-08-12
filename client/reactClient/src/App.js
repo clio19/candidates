@@ -22,6 +22,8 @@ import AddInterview from './components/Interview/AddInterview';
 
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import InterviewBoard from './components/InterviewBoard/InterviewBoard';
+import AddInterviewTask from './components/InterviewBoard/InterviewTasks/AddInterviewTask';
 
 // class App extends React.Component {
 //   constructor(props) {
@@ -75,6 +77,11 @@ const App = () => {
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
               <Route path="/addInterview" component={AddInterview} />
+              <Route path="/interviewBoard/:id" component={InterviewBoard} />
+              <Route
+                path="/addInterviewTask/:id"
+                component={AddInterviewTask}
+              />
             </Switch>
           </div>
         </div>

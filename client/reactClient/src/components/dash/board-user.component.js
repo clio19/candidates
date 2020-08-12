@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import UserService from '../../services/user.service';
 
-import InterviewBoard from '../Interview/InterviewBoard';
+import InterviewBoard from '../Interview/InterviewList';
 
 // export default class BoardUser extends Component {
 //   constructor(props) {

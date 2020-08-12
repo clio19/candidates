@@ -27,14 +27,14 @@ class InterviewItem extends Component {
             </div>
             <div className="col-md-4 d-none d-lg-block">
               <ul className="list-group">
-                <a href="#">
+                <Link to={`/interviewBoard/${interview.interviewIdentifier}`}>
                   <li className="list-group-item board">
                     <i className="fa fa-flag-checkered pr-1">
                       {' '}
                       Interview Board{' '}
                     </i>
                   </li>
-                </a>
+                </Link>
                 <Link to={`/updateInterview/${interview.interviewIdentifier}`}>
                   <li className="list-group-item update">
                     <i className="fa fa-edit pr-1"> Update Interview Info</i>

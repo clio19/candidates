@@ -8,10 +8,7 @@ import {
 
 export const createInterview = (interview, history) => async (dispatch) => {
   try {
-    const res = await axios.post(
-      'http://localhost:8080/api/interview',
-      interview
-    );
+    await axios.post('http://localhost:8080/api/interview', interview);
     history.push('/user');
   } catch (err) {
     dispatch({
